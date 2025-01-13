@@ -40,6 +40,7 @@ fun MainScreen() {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             var username by remember { mutableStateOf("") }
             var showGreeting by remember { mutableStateOf(false) }
+            var lastGreetingName by remember { mutableStateOf("") }
 
             Column(
                 modifier = Modifier
@@ -49,31 +50,32 @@ fun MainScreen() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 UserInput(
-                    name = name,
-                    onNameChange = { name = it }
+                    name = username,
+                    onNameChange = { newName ->
+                        username = newName
+                    }
                 )
-
                 Button(
                     onClick = {
                         if (username.isNotBlank()) {
-                            showGreeting = false
+                            lastGreetingName = username
+                            showGreeting = true
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag("submitButton")
+                        .testTag("submitButton"),
                 ) {
                     Text("Submit")
                 }
 
                 if (showGreeting) {
-                    Greeeting(
-                        name = username,
+                    Greeting(
+                        name = lastGreetingName,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 16.dp)
                     )
-
                 }
             }
         }
@@ -95,7 +97,7 @@ fun UserInput(name: String, onNameChange: (String) -> Unit, modifier: Modifier =
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $username!, Welcome to InF2007!",
+        text = "Hello $name!, Welcome to INF2007!",
         modifier = Modifier
             .fillMaxWidth()
             .testTag("greeting")
